@@ -8,7 +8,6 @@
 
 #import "UIView+HUDAddition.h"
 #import "MBProgressHUD.h"
-#import "MyHelper.h"
 
 static MBProgressHUD *hud = nil;
 static void(^staticCompletion)(void) ;

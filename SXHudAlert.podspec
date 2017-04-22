@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SXHudAlert"
-  s.version      = "0.0.2"
+  s.version      = "0.0.3"
   s.summary      = "easy useing MBProgressHUD"
   #s.description  = <<-DESC
   #                  DESC
