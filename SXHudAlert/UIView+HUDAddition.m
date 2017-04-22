@@ -7,7 +7,7 @@
 //
 
 #import "UIView+HUDAddition.h"
-#import "MBProgressHUD.h"
+#import <MBProgressHUD.h>
 
 static MBProgressHUD *hud = nil;
 static void(^staticCompletion)(void) ;
@@ -117,15 +117,15 @@ static HubDelegate *hubDelegate = nil;
     hud = [[MBProgressHUD alloc] initWithFrame:[UIScreen mainScreen].bounds];
     hud.mode = MBProgressHUDModeIndeterminate;
     hud.minSize = CGSizeMake([UIScreen mainScreen].bounds.size.width/3, [UIScreen mainScreen].bounds.size.width/3);
-    hud.backgroundView.color = RGBA(0, 0, 0, .2);
+    hud.backgroundView.color = [UIColor colorWithRed:0 green:0 blue:0 alpha:.2];
     hud.bezelView.color = [UIColor whiteColor];
     if (hubStyleBlack) {
-        hud.bezelView.color = RGBA(0, 0, 0, .8);
+        hud.bezelView.color = [UIColor colorWithRed:0 green:0 blue:0 alpha:.8];
         hud.label.textColor = [UIColor whiteColor];
         hud.contentColor = [UIColor whiteColor];
     }
     if (isPlain) {
-        hud.minSize = CGSizeMake(ScreenWidth/2, 44);
+        hud.minSize = CGSizeMake([UIScreen mainScreen].bounds.size.width/2, 44);
         hud.mode = MBProgressHUDModeText;
     }
 }
