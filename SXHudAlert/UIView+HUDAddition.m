@@ -7,8 +7,7 @@
 //
 
 #import "UIView+HUDAddition.h"
-#import <MBProgressHUD.h>
-#import "AppDelegate.h"
+#import "MBProgressHUD.h"
 #import "MyHelper.h"
 
 static MBProgressHUD *hud = nil;
@@ -51,7 +50,7 @@ static HubDelegate *hubDelegate = nil;
     [self createHudAndIsPlain:YES];
     hud.label.text = message;
     if (hubSuperViewWindow) {
-        [[[AppDelegate alloc] init].window addSubview:hud];
+        [[[UIApplication sharedApplication].delegate window] addSubview:hud];
     } else {
         [view addSubview:hud];
     }
@@ -72,7 +71,7 @@ static HubDelegate *hubDelegate = nil;
     [self createHudAndIsPlain:YES];
     hud.label.text = message;
     if (hubSuperViewWindow) {
-        [[[AppDelegate alloc] init].window addSubview:hud];
+        [[[UIApplication sharedApplication].delegate window] addSubview:hud];
     } else {
         [view addSubview:hud];
     }
@@ -104,7 +103,7 @@ static HubDelegate *hubDelegate = nil;
     }
     [self createHudAndIsPlain:NO];
     if (hubSuperViewWindow) {
-        [[[AppDelegate alloc] init].window addSubview:hud];
+        [[[UIApplication sharedApplication].delegate window] addSubview:hud];
     } else {
         [view addSubview:hud];
     }
