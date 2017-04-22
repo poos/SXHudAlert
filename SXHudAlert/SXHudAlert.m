@@ -13,6 +13,7 @@ static MBProgressHUD *hud = nil;
 static void(^staticCompletion)(void) ;
 static BOOL hubStyleBlack = NO;
 static BOOL hubSuperViewWindow = NO;
+static CGFloat hubDelayTime = 1;
 
 @interface HubDelegate : NSObject <MBProgressHUDDelegate>
 
@@ -37,6 +38,10 @@ static HubDelegate *hubDelegate = nil;
     hubStyleBlack = isBlack;
 }
 
+- (void)setDissmissDelay:(CGFloat)delay {
+    hubDelayTime = delay;
+}
+
 - (void)showAlert:(NSString *)message {
     UIView * view = nil;
     if ([self isKindOfClass:[UIViewController class]]) {
@@ -55,7 +60,7 @@ static HubDelegate *hubDelegate = nil;
     }
     [hud showAnimated:YES];
     
-    [hud hideAnimated:YES afterDelay:1];
+    [hud hideAnimated:YES afterDelay:hubDelayTime];
 }
 
 - (void)showAlert:(NSString *)message completion:(void(^)(void))completion {
@@ -76,7 +81,7 @@ static HubDelegate *hubDelegate = nil;
     }
     [hud showAnimated:YES];
     
-    [hud hideAnimated:YES afterDelay:1];
+    [hud hideAnimated:YES afterDelay:hubDelayTime];
     
     staticCompletion = completion;
     if (!hubDelegate) {
