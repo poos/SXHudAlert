@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SXHudAlert"
-  s.version      = "0.0.5"
+  s.version      = "0.0.6"
   s.summary      = "easy useing MBProgressHUD"
   #s.description  = <<-DESC
   #                  DESC
@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://github.com/poos/SXHudAlert.git", :tag => s.version.to_s }
 #s.public_header_files = 'Example/SXHelper/SXHelper/SXHelper.h'
-  s.source_files  = "SXHudAlert/UIView+HUDAddition.h"
+  s.source_files  = "SXHudAlert/SXHudAlert.h"
   #s.exclude_files = "Classes/Exclude"
 
 
