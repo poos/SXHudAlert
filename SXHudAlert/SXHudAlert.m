@@ -3,14 +3,14 @@
 //  SXHelper
 //
 //  Created by Shown on 2017/4/18.
-//  Copyright © 2017年 n369. All rights reserved.
+//  Copyright © 2017年. All rights reserved.
 //
 
 #import "SXHudAlert.h"
 #import "MBProgressHUD.h"
 
 static MBProgressHUD *hud = nil;
-static void(^staticCompletion)(void) ;
+static void(^staticDissmissBlock)(void) ;
 static BOOL hubStyleBlack = NO;
 static BOOL hubSuperViewWindow = NO;
 static CGFloat hubDelayTime = 1;
@@ -21,74 +21,30 @@ static CGFloat hubDelayTime = 1;
 
 @implementation HubDelegate
 - (void)hudWasHidden:(MBProgressHUD *)hud {
-    staticCompletion();
+    staticDissmissBlock();
 }
 
 @end
 
 static HubDelegate *hubDelegate = nil;
-@implementation UIView (SXHUDAddition)
 
+@implementation SXHud
 
-- (void)setSuperViewWindow:(BOOL)isWindow {
++ (void)configSuperViewWindow:(BOOL)isWindow {
     hubSuperViewWindow = isWindow;
 }
 
-- (void)setStyleBlack:(BOOL)isBlack {
++ (void)configStyleBlack:(BOOL)isBlack {
     hubStyleBlack = isBlack;
 }
 
-- (void)setDissmissDelay:(CGFloat)delay {
++ (void)configDissmissDelay:(CGFloat)delay {
     hubDelayTime = delay;
 }
 
-- (void)showAlert:(NSString *)message {
-    UIView * view = nil;
-    if ([self isKindOfClass:[UIViewController class]]) {
-        view = [(UIViewController *)self view];
-    } else if ([self isKindOfClass:[UIView class]]) {
-        view = (UIView *)self;
-    } else {
-        return;
-    }
-    [self createHudAndIsPlain:YES];
-    hud.label.text = message;
-    if (hubSuperViewWindow) {
-        [[[UIApplication sharedApplication].delegate window] addSubview:hud];
-    } else {
-        [view addSubview:hud];
-    }
-    [hud showAnimated:YES];
-    
-    [hud hideAnimated:YES afterDelay:hubDelayTime];
-}
+@end
 
-- (void)showAlert:(NSString *)message completion:(void(^)(void))completion {
-    UIView * view = nil;
-    if ([self isKindOfClass:[UIViewController class]]) {
-        view = [(UIViewController *)self view];
-    } else if ([self isKindOfClass:[UIView class]]) {
-        view = (UIView *)self;
-    } else {
-        return;
-    }
-    [self createHudAndIsPlain:YES];
-    hud.label.text = message;
-    if (hubSuperViewWindow) {
-        [[[UIApplication sharedApplication].delegate window] addSubview:hud];
-    } else {
-        [view addSubview:hud];
-    }
-    [hud showAnimated:YES];
-    
-    [hud hideAnimated:YES afterDelay:hubDelayTime];
-    
-    staticCompletion = completion;
-    if (!hubDelegate) {
-        hubDelegate = [[HubDelegate alloc] init];
-    }
-    hud.delegate = hubDelegate;
-}
+@implementation UIViewController (SXHudHelper)
 
 - (void)hideAlert {
     [hud hideAnimated:YES];
@@ -96,23 +52,54 @@ static HubDelegate *hubDelegate = nil;
     hud = nil;
 }
 
+- (void)showAlert:(NSString *)message {
+    [self showAlert:message dissmissed:nil];
+}
+
+- (void)showAlert:(NSString *)message dissmissed:(void(^)(void))dissmissBlock{
+    [self showBaseAlert:message isProgressHub:NO dissmissed:dissmissBlock];
+}
+
 - (void)showProgerssAlert:(NSString *)message {
-    UIView * view = nil;
-    if ([self isKindOfClass:[UIViewController class]]) {
-        view = [(UIViewController *)self view];
-    } else if ([self isKindOfClass:[UIView class]]) {
-        view = (UIView *)self;
-    } else {
-        return;
-    }
-    [self createHudAndIsPlain:NO];
+    [self showProgerssAlert:message dissmissed:nil];
+}
+
+- (void)showProgerssAlert:(NSString *)message dissmissed:(void(^)(void))dissmissBlock{
+    [self showBaseAlert:message isProgressHub:YES dissmissed:dissmissBlock];
+}
+
+
+- (void)showBaseAlert:(NSString *)message isProgressHub:(BOOL)isProgressHub dissmissed:(void(^)(void))dissmissBlock{
+    
+    [self createHudAndIsPlain:!isProgressHub];
+    hud.label.text = message;
+    
     if (hubSuperViewWindow) {
         [[[UIApplication sharedApplication].delegate window] addSubview:hud];
     } else {
+        UIView * view = nil;
+        if ([self isKindOfClass:[UIViewController class]]) {
+            view = [(UIViewController *)self view];
+        } else if ([self isKindOfClass:[UIView class]]) {
+            view = (UIView *)self;
+        } else {
+            return;
+        }
         [view addSubview:hud];
     }
-    hud.label.text = message;
     [hud showAnimated:YES];
+    
+    if (!isProgressHub) {
+        [hud hideAnimated:YES afterDelay:hubDelayTime];
+    }
+    
+    if (dissmissBlock) {
+        staticDissmissBlock = dissmissBlock;
+        if (!hubDelegate) {
+            hubDelegate = [[HubDelegate alloc] init];
+        }
+        hud.delegate = hubDelegate;
+    }
 }
 
 - (void)createHudAndIsPlain:(BOOL)isPlain {
